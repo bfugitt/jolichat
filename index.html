@@ -60,8 +60,8 @@
             position: relative;
         }
 
-        /* --- Login Screen Styling --- */
-        #login-screen {
+        /* --- Screens (Login, Waiting, App) --- */
+        .screen-panel {
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -159,7 +159,7 @@
 
         /* --- Admin Toolbar --- */
         #admin-toolbar {
-            background-color: #FDF3E3; /* Cream/Clay background */
+            background-color: #FDF3E3; 
             border-bottom: 1px solid var(--color-clay);
             padding: 10px 20px;
             display: flex;
@@ -169,11 +169,7 @@
             color: var(--color-clay);
         }
 
-        .admin-controls {
-            display: flex;
-            gap: 10px;
-        }
-
+        .admin-controls { display: flex; gap: 10px; }
         .btn-admin {
             background-color: transparent;
             color: var(--color-clay);
@@ -182,10 +178,7 @@
             font-size: 0.8rem;
             box-shadow: none;
         }
-        .btn-admin:hover {
-            background-color: var(--color-clay);
-            color: white;
-        }
+        .btn-admin:hover { background-color: var(--color-clay); color: white; }
         
         .frozen-status {
             background-color: var(--color-alert);
@@ -193,7 +186,7 @@
             padding: 5px 10px;
             border-radius: 4px;
             font-size: 0.8em;
-            display: none; /* Hidden by default */
+            display: none;
         }
 
         /* --- Chat Interface --- */
@@ -231,6 +224,15 @@
             overflow-y: auto;
         }
 
+        .section-header {
+            font-size: 0.75rem;
+            color: var(--color-pebble);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 15px 0 5px 5px;
+            font-weight: bold;
+        }
+
         .user-item {
             padding: 10px 15px;
             border-radius: var(--radius-small);
@@ -239,8 +241,11 @@
             transition: background-color 0.2s;
             display: flex;
             align-items: center;
+            justify-content: space-between; /* Changed for approve btn */
             gap: 8px;
         }
+
+        .user-item-content { display: flex; align-items: center; gap: 8px; }
 
         .user-item:hover { background-color: rgba(255,255,255,0.5); }
         .user-item.selected { 
@@ -248,6 +253,28 @@
             color: white; 
             font-weight: bold;
         }
+        
+        /* Pending User Style */
+        .user-item.pending {
+            background-color: rgba(212, 163, 115, 0.1); /* light clay */
+            border: 1px dashed var(--color-clay);
+        }
+
+        .approve-btn {
+            background: var(--color-sage);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0;
+            box-shadow: none;
+        }
+        .approve-btn:hover { transform: scale(1.1); }
 
         /* Message Area */
         #message-area {
@@ -266,7 +293,6 @@
             gap: 15px;
         }
 
-        /* Message Bubbles */
         .msg {
             max-width: 70%;
             padding: 12px 18px;
@@ -276,57 +302,15 @@
             position: relative;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
-
-        .msg-meta {
-            font-size: 0.7rem;
-            margin-bottom: 4px;
-            opacity: 0.8;
-            font-weight: bold;
-            display: block;
-        }
-
-        /* Styles for different message types */
-        
-        /* 1. Standard (Other Students) */
-        .msg.student {
-            background-color: white;
-            color: var(--color-stone);
-            align-self: flex-start;
-            border-bottom-left-radius: 2px;
-        }
-
-        /* 2. Self (Me) */
-        .msg.self {
-            background-color: var(--color-sage);
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 2px;
-        }
+        .msg-meta { font-size: 0.7rem; margin-bottom: 4px; opacity: 0.8; font-weight: bold; display: block; }
+        .msg.student { background-color: white; color: var(--color-stone); align-self: flex-start; border-bottom-left-radius: 2px; }
+        .msg.self { background-color: var(--color-sage); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
         .msg.self .msg-meta { color: rgba(255,255,255,0.9); }
-
-        /* 3. Teacher/Admin */
-        .msg.admin {
-            background-color: #FDF3E3; /* Soft cream */
-            border: 1px solid var(--color-clay);
-            color: #8D6E63;
-            align-self: center; /* Centered slightly? or just distinct */
-            max-width: 80%;
-        }
+        .msg.admin { background-color: #FDF3E3; border: 1px solid var(--color-clay); color: #8D6E63; align-self: center; max-width: 80%; }
         .msg.admin .msg-meta { color: var(--color-clay); font-family: 'Playfair Display', serif; }
+        .msg.private { border: 1px dashed var(--color-pebble); }
 
-        /* 4. Private DM */
-        .msg.private {
-            border: 1px dashed var(--color-pebble);
-        }
-
-        /* Images in Chat */
-        .chat-image {
-            max-width: 100%;
-            border-radius: 8px;
-            margin-top: 8px;
-            border: 4px solid white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+        .chat-image { max-width: 100%; border-radius: 8px; margin-top: 8px; border: 4px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
         /* Input Area */
         #input-area {
@@ -374,13 +358,41 @@
         .icon-btn:hover { background-color: var(--bg-canvas); transform: none; }
         .icon-btn svg { width: 24px; height: 24px; stroke-width: 2; }
 
+        /* --- Affirmation Emoji Picker --- */
+        #emoji-picker {
+            position: absolute;
+            bottom: 70px;
+            left: 20px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: var(--radius-small);
+            box-shadow: var(--shadow-soft);
+            padding: 10px;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 5px;
+            z-index: 100;
+        }
+        .emoji-btn {
+            font-size: 1.5rem;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            box-shadow: none;
+        }
+        .emoji-btn:hover { background: var(--bg-canvas); transform: scale(1.2); }
+
     </style>
 </head>
 <body>
 
     <div class="window-container">
+        
         <!-- 1. LOGIN SCREEN -->
-        <div id="login-screen">
+        <div id="login-screen" class="screen-panel">
             <h2>Community Circle</h2>
             <p style="margin-bottom: 20px; color: var(--color-pebble);">Digital Atelier Connection</p>
 
@@ -392,7 +404,6 @@
             </div>
             
             <div id="login-form">
-                
                 <input type="text" id="room-code" placeholder="Frequency (Room Name)">
 
                 <!-- Google Auth Button (Primary) -->
@@ -419,9 +430,20 @@
             </div>
         </div>
 
-        <!-- 2. MAIN APP SCREEN -->
+        <!-- 2. WAITING SCREEN (New) -->
+        <div id="waiting-screen" class="screen-panel hidden">
+            <h2 style="font-size: 2rem;">Knocking...</h2>
+            <p style="font-style: italic; color: var(--color-clay);">We are letting the Guide know you are here.</p>
+            <div style="margin-top: 30px;">
+                <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#7C9082" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </div>
+            <p style="margin-top: 20px; font-size: 0.9rem;">Please wait for approval to enter.</p>
+            <button onclick="signOut()" class="btn-danger" style="margin-top: 20px;">Cancel</button>
+        </div>
+
+        <!-- 3. MAIN APP SCREEN -->
         <div id="app-screen" class="hidden">
-            <!-- ADMIN TOOLBAR (Only shows for teachers) -->
+            <!-- ADMIN TOOLBAR -->
             <div id="admin-toolbar" class="hidden">
                 <span><strong>Guide Controls</strong></span>
                 <div class="admin-controls">
@@ -448,11 +470,19 @@
                 <!-- Left Sidebar: Users -->
                 <div id="user-sidebar">
                     <div id="all-users-btn" class="user-item selected" onclick="selectUser('ALL')">
-                        <!-- Icon: Users -->
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                        Everyone
+                        <div class="user-item-content">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                            Everyone
+                        </div>
                     </div>
                     <div style="height: 1px; background: rgba(0,0,0,0.1); margin: 10px 0;"></div>
+                    
+                    <div id="pending-section" class="hidden">
+                        <div class="section-header">Knocking...</div>
+                        <div id="pending-user-list"></div>
+                        <div style="height: 1px; background: rgba(0,0,0,0.1); margin: 10px 0;"></div>
+                    </div>
+
                     <div id="dynamic-user-list"></div>
                 </div>
 
@@ -461,9 +491,28 @@
                     <div id="msg-feed"></div>
                     
                     <div id="input-area">
+                        <!-- Emoji Picker -->
+                        <div id="emoji-picker" class="hidden">
+                            <button class="emoji-btn" onclick="addEmoji('🌿')">🌿</button>
+                            <button class="emoji-btn" onclick="addEmoji('🌻')">🌻</button>
+                            <button class="emoji-btn" onclick="addEmoji('☀️')">☀️</button>
+                            <button class="emoji-btn" onclick="addEmoji('✨')">✨</button>
+                            <button class="emoji-btn" onclick="addEmoji('💡')">💡</button>
+                            <button class="emoji-btn" onclick="addEmoji('❤️')">❤️</button>
+                            <button class="emoji-btn" onclick="addEmoji('😊')">😊</button>
+                            <button class="emoji-btn" onclick="addEmoji('👏')">👏</button>
+                            <button class="emoji-btn" onclick="addEmoji('🙌')">🙌</button>
+                            <button class="emoji-btn" onclick="addEmoji('🤝')">🤝</button>
+                        </div>
+
                         <!-- Hidden File Input -->
                         <input type="file" id="file-input" accept="image/*" class="hidden" onchange="handleFileSelect()">
                         
+                        <!-- Affirmation Button -->
+                        <button class="icon-btn" onclick="toggleEmoji()" title="Affirmations" style="color: var(--color-clay);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+                        </button>
+
                         <!-- Camera Button -->
                         <button class="icon-btn" onclick="document.getElementById('file-input').click()" title="Share Image">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
@@ -506,7 +555,7 @@
         const auth = firebase.auth();
 
         // --- STATE ---
-        let currentUser = { name: "", room: "", role: "student" }; 
+        let currentUser = { name: "", room: "", role: "student", status: "pending" }; 
         let selectedTarget = "ALL";
         let dbListeners = [];
         let authUserObject = null;
@@ -526,7 +575,6 @@
             const isTeacher = urlParams.get('teacher') === 'true';
             if (isTeacher) {
                 currentUser.role = 'teacher';
-                // Subtle indicator for admin
                 document.getElementById("login-screen").querySelector('h2').innerText += " (Guide Mode)";
                 toggleManual();
             }
@@ -543,22 +591,37 @@
                     document.getElementById("username").value = user.displayName;
                 } else {
                     authUserObject = null;
-                    // Reset button content to default
                     btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg> Sign In with Google`;
                     btn.style.color = "#444";
                     btn.style.borderColor = "#ddd";
                 }
+            });
+            
+            // Emoji closer
+            document.addEventListener('click', function(e) {
+                 const picker = document.getElementById("emoji-picker");
+                 const btn = document.querySelector('button[title="Affirmations"]');
+                 if (!picker.contains(e.target) && !btn.contains(e.target)) {
+                     picker.classList.add("hidden");
+                 }
             });
         };
 
         // --- UI FUNCTIONS ---
         function toggleManual() {
             const area = document.getElementById("manual-login-area");
-            if (area.classList.contains("hidden")) {
-                area.classList.remove("hidden");
-            } else {
-                area.classList.add("hidden");
-            }
+            area.classList.toggle("hidden");
+        }
+        
+        function toggleEmoji() {
+            document.getElementById("emoji-picker").classList.toggle("hidden");
+        }
+        
+        function addEmoji(emoji) {
+            const input = document.getElementById("msg-input");
+            input.value += emoji;
+            document.getElementById("emoji-picker").classList.add("hidden");
+            input.focus();
         }
 
         // --- AUTH FLOW ---
@@ -568,14 +631,14 @@
 
             if (authUserObject) {
                 document.getElementById("username").value = authUserObject.displayName;
-                login();
+                login(true); // Pass true for isGoogle
             } else {
                 const provider = new firebase.auth.GoogleAuthProvider();
                 auth.signInWithPopup(provider)
                     .then((result) => {
                         authUserObject = result.user;
                         document.getElementById("username").value = result.user.displayName;
-                        login();
+                        login(true);
                     }).catch((error) => {
                         console.error(error);
                         alert("Google Sign-In Failed: " + error.message);
@@ -584,16 +647,26 @@
         }
 
         // --- LOGIN LOGIC ---
-        function login() {
+        function login(isGoogle = false) {
             const name = document.getElementById("username").value.trim();
             const room = document.getElementById("room-code").value.trim();
             
             if(!name || !room) return alert("Please enter your name and room.");
 
+            // Determine Status
+            let status = 'pending';
+            if (isGoogle) status = 'approved';
+            if (currentUser.role === 'teacher') status = 'approved';
+
+            currentUser.name = name;
+            currentUser.room = room;
+            currentUser.status = status;
+
+            // Room Check
             if (currentUser.role === 'student') {
                 db.ref(`rooms/${room}`).get().then((snapshot) => {
                     if (snapshot.exists()) {
-                        proceedToApp(name, room);
+                        processLoginStep();
                     } else {
                         alert("Note: This room hasn't been opened by a Teacher yet.");
                         return;
@@ -602,31 +675,60 @@
                     alert("Connection Error");
                 });
             } else {
-                proceedToApp(name, room);
+                processLoginStep();
             }
         }
 
-        function proceedToApp(name, room) {
-            currentUser.name = name;
-            currentUser.room = room;
+        function processLoginStep() {
+            // Write User Data
+            const userRef = db.ref(`rooms/${currentUser.room}/users/${currentUser.name}`);
+            userRef.set({ 
+                role: currentUser.role, 
+                status: currentUser.status,
+                lastSeen: Date.now() 
+            });
+            userRef.onDisconnect().remove();
 
+            if (currentUser.status === 'approved') {
+                proceedToApp();
+            } else {
+                waitForApproval();
+            }
+        }
+        
+        function waitForApproval() {
             document.getElementById("login-screen").classList.add("hidden");
+            document.getElementById("waiting-screen").classList.remove("hidden");
+            
+            // Listen for my own status change
+            const myStatusRef = db.ref(`rooms/${currentUser.room}/users/${currentUser.name}/status`);
+            dbListeners.push(myStatusRef);
+            
+            myStatusRef.on('value', (snapshot) => {
+                if (snapshot.val() === 'approved') {
+                    // I have been approved!
+                    myStatusRef.off(); // Stop listening to status
+                    proceedToApp();
+                }
+            });
+        }
+
+        function proceedToApp() {
+            document.getElementById("login-screen").classList.add("hidden");
+            document.getElementById("waiting-screen").classList.add("hidden");
             document.getElementById("app-screen").classList.remove("hidden");
-            document.getElementById("display-room").innerText = room;
-            document.getElementById("display-name").innerText = name;
+            
+            document.getElementById("display-room").innerText = currentUser.room;
+            document.getElementById("display-name").innerText = currentUser.name;
 
             // Show Admin Toolbar if teacher
             if (currentUser.role === 'teacher') {
                 document.getElementById("admin-toolbar").classList.remove("hidden");
             }
 
-            const userRef = db.ref(`rooms/${room}/users/${name}`);
-            userRef.set({ role: currentUser.role, lastSeen: Date.now() });
-            userRef.onDisconnect().remove();
-
             listenForMessages();
             listenForUsers();
-            listenForRoomState(); // Start listening for freeze status
+            listenForRoomState(); 
         }
 
         function signOut() {
@@ -638,100 +740,36 @@
             
             document.getElementById("msg-feed").innerHTML = "";
             document.getElementById("dynamic-user-list").innerHTML = "";
+            document.getElementById("pending-user-list").innerHTML = "";
+            
             document.getElementById("app-screen").classList.add("hidden");
+            document.getElementById("waiting-screen").classList.add("hidden");
             document.getElementById("login-screen").classList.remove("hidden");
             document.getElementById("admin-toolbar").classList.add("hidden");
+            document.getElementById("pending-section").classList.add("hidden");
             
             selectedTarget = "ALL";
             document.getElementById("target-display").innerText = "THE WHOLE GROUP";
         }
-
-        // --- ADMIN FUNCTIONS ---
-
-        function toggleFreezeRoom() {
-            const newState = !isFrozen;
-            db.ref(`rooms/${currentUser.room}/state/frozen`).set(newState);
-            // Label updates automatically via listener
-        }
-
-        function dissolveRoom() {
-            const confirmClear = confirm("Are you sure? This will delete ALL message history for this room forever.");
-            if (confirmClear) {
-                db.ref(`rooms/${currentUser.room}/messages`).remove();
-                // Optionally add a system message
-                db.ref(`rooms/${currentUser.room}/messages`).push({
-                    sender: "SYSTEM",
-                    recipient: "ALL",
-                    text: "Room history has been cleared by the Guide.",
-                    timestamp: Date.now(),
-                    role: 'admin'
-                });
-            }
-        }
-
-        function downloadChat() {
-            db.ref(`rooms/${currentUser.room}/messages`).once('value', (snapshot) => {
-                const msgs = snapshot.val();
-                if (!msgs) return alert("No history to save.");
-
-                let textContent = `CHAT HISTORY FOR ROOM: ${currentUser.room}\nDate: ${new Date().toLocaleString()}\n\n`;
-                
-                Object.values(msgs).forEach(msg => {
-                    const time = new Date(msg.timestamp).toLocaleTimeString();
-                    let line = `[${time}] ${msg.sender}`;
-                    if (msg.recipient !== 'ALL') line += ` (to ${msg.recipient})`;
-                    line += `: ${msg.text || '[Image Attachment]'}\n`;
-                    textContent += line;
-                });
-
-                // Create Blob and download
-                const blob = new Blob([textContent], { type: 'text/plain' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `${currentUser.room}_history_${Date.now()}.txt`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            });
-        }
-
-        // --- SELECTION LOGIC ---
         
-        function selectUser(targetName) {
-            selectedTarget = targetName;
-            const display = targetName === 'ALL' ? "THE WHOLE GROUP" : targetName.toUpperCase();
-            document.getElementById("target-display").innerText = display;
-
-            // Visual Update
-            document.querySelectorAll(".user-item").forEach(el => el.classList.remove("selected"));
-            
-            if (targetName === 'ALL') {
-                document.getElementById("all-users-btn").classList.add("selected");
-            } 
-            // Note: Dynamic user items highlight themselves in their own onclick, 
-            // but if we click ALL, we need to clear them (done above).
+        function approveUser(uName) {
+            db.ref(`rooms/${currentUser.room}/users/${uName}/status`).set('approved');
         }
-
 
         // --- LISTENERS ---
 
         function listenForRoomState() {
             const stateRef = db.ref(`rooms/${currentUser.room}/state/frozen`);
             dbListeners.push(stateRef);
-
             stateRef.on('value', (snapshot) => {
                 isFrozen = snapshot.val() === true;
                 const inputArea = document.getElementById("input-area");
                 const freezeBadge = document.getElementById("freeze-badge");
                 const freezeBtn = document.getElementById("freeze-btn");
 
-                // Update UI based on freeze state AND role
                 if (isFrozen) {
                     freezeBadge.style.display = "inline-block";
                     if (freezeBtn) freezeBtn.innerText = "🔥 Unfreeze Chat";
-                    
-                    // If student, disable input
                     if (currentUser.role === 'student') {
                         inputArea.classList.add("frozen");
                         document.getElementById("msg-input").disabled = true;
@@ -739,7 +777,6 @@
                 } else {
                     freezeBadge.style.display = "none";
                     if (freezeBtn) freezeBtn.innerText = "❄️ Freeze Chat";
-                    
                     inputArea.classList.remove("frozen");
                     document.getElementById("msg-input").disabled = false;
                 }
@@ -752,15 +789,19 @@
 
             usersRef.on('value', (snapshot) => {
                 const listDiv = document.getElementById("dynamic-user-list");
+                const pendingDiv = document.getElementById("pending-user-list");
+                const pendingSection = document.getElementById("pending-section");
+                
                 listDiv.innerHTML = "";
+                pendingDiv.innerHTML = "";
+                
+                let hasPending = false;
                 
                 snapshot.forEach((child) => {
                     const uName = child.key;
                     const uData = child.val();
                     
                     if(uName !== currentUser.name) {
-                        const div = document.createElement("div");
-                        div.className = "user-item";
                         
                         // Icon logic
                         let icon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`;
@@ -768,40 +809,72 @@
                             icon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4A373" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>`;
                         }
 
-                        div.innerHTML = `${icon} <span>${uName}</span>`;
-                        
-                        div.onclick = () => {
-                            selectUser(uName); // Use the main function
-                            div.classList.add("selected"); // Highlight this specific one
-                        };
-                        listDiv.appendChild(div);
+                        // STATUS LOGIC
+                        if (uData.status === 'pending') {
+                            // Only teachers see pending users
+                            if (currentUser.role === 'teacher') {
+                                hasPending = true;
+                                const pDiv = document.createElement("div");
+                                pDiv.className = "user-item pending";
+                                pDiv.innerHTML = `
+                                    <div class="user-item-content">
+                                        ${icon} <span>${uName}</span>
+                                    </div>
+                                    <button class="approve-btn" onclick="approveUser('${uName}')" title="Approve">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    </button>
+                                `;
+                                pendingDiv.appendChild(pDiv);
+                            }
+                        } else {
+                            // Approved User
+                            const div = document.createElement("div");
+                            div.className = "user-item";
+                            div.innerHTML = `<div class="user-item-content">${icon} <span>${uName}</span></div>`;
+                            div.onclick = () => {
+                                selectUser(uName); 
+                                div.classList.add("selected");
+                            };
+                            listDiv.appendChild(div);
+                        }
                     }
                 });
+
+                // Toggle visibility of pending section
+                if (hasPending && currentUser.role === 'teacher') {
+                    pendingSection.classList.remove("hidden");
+                } else {
+                    pendingSection.classList.add("hidden");
+                }
             });
+        }
+
+        // --- STANDARD APP FUNCTIONS ---
+        function selectUser(targetName) {
+            selectedTarget = targetName;
+            const display = targetName === 'ALL' ? "THE WHOLE GROUP" : targetName.toUpperCase();
+            document.getElementById("target-display").innerText = display;
+            document.querySelectorAll(".user-item").forEach(el => el.classList.remove("selected"));
+            if (targetName === 'ALL') document.getElementById("all-users-btn").classList.add("selected");
         }
 
         function handleFileSelect() {
             const fileInput = document.getElementById("file-input");
             const file = fileInput.files[0];
-            
             if (file) {
                 if (file.size > 1000000) {
                     alert("Please choose a smaller image (under 1MB).");
-                    fileInput.value = "";
-                    return;
+                    fileInput.value = ""; return;
                 }
-
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const base64Data = e.target.result;
-                    if (confirm(`Share this image with the group?`)) {
+                    if (confirm(`Share this image?`)) {
                         db.ref(`rooms/${currentUser.room}/messages`).push({
                             sender: currentUser.name,
                             role: currentUser.role,
                             recipient: selectedTarget,
-                            text: "", 
-                            image: base64Data,
-                            timestamp: Date.now()
+                            text: "", image: base64Data, timestamp: Date.now()
                         });
                     }
                     fileInput.value = ""; 
@@ -813,11 +886,9 @@
         function listenForMessages() {
             const msgsRef = db.ref(`rooms/${currentUser.room}/messages`);
             dbListeners.push(msgsRef);
-
             msgsRef.limitToLast(100).on('child_added', (snapshot) => {
                 const msg = snapshot.val();
                 let show = false;
-
                 if (currentUser.role === 'teacher') show = true; 
                 else if (msg.sender === currentUser.name) show = true; 
                 else if (msg.recipient === 'ALL') show = true; 
@@ -830,25 +901,17 @@
                     const isAdmin = msg.role === 'teacher';
                     const isSelf = msg.sender === currentUser.name;
                     
-                    // Determine Styling Class
                     let classes = "msg";
-                    if (isAdmin) {
-                        classes += " admin";
-                    } else if (isSelf) {
-                        classes += " self";
-                    } else {
-                        classes += " student";
-                    }
-                    
+                    if (isAdmin) classes += " admin";
+                    else if (isSelf) classes += " self";
+                    else classes += " student";
                     if (isPrivate) classes += " private";
-
                     div.className = classes;
                     
                     let meta = msg.sender;
                     if(isPrivate) meta += ` (Whisper to ${msg.recipient})`;
                     if(isAdmin) meta = `Guide ${msg.sender}`;
 
-                    // --- CONTENT RENDERING ---
                     let contentHtml = "";
                     if (msg.image) contentHtml += `<img src="${msg.image}" class="chat-image">`;
                     if (msg.text) contentHtml += `<div>${msg.text}</div>`;
@@ -858,19 +921,13 @@
                     feed.scrollTop = feed.scrollHeight; 
                 }
             });
-            
-            // Handle Removals (Dissolve Room)
-            msgsRef.on('child_removed', (snapshot) => {
-                const feed = document.getElementById("msg-feed");
-                feed.innerHTML = ""; // Clear feed visually
-            });
+            msgsRef.on('child_removed', (snapshot) => { document.getElementById("msg-feed").innerHTML = ""; });
         }
 
         function sendMessage() {
             const input = document.getElementById("msg-input");
             const text = input.value.trim();
             if(!text) return;
-
             db.ref(`rooms/${currentUser.room}/messages`).push({
                 sender: currentUser.name,
                 role: currentUser.role, 
@@ -879,6 +936,35 @@
                 timestamp: Date.now()
             });
             input.value = "";
+        }
+        
+        // --- ADMIN FUNCTIONS ---
+        function toggleFreezeRoom() {
+            const newState = !isFrozen;
+            db.ref(`rooms/${currentUser.room}/state/frozen`).set(newState);
+        }
+        function dissolveRoom() {
+            if (confirm("Are you sure? This will delete ALL history.")) {
+                db.ref(`rooms/${currentUser.room}/messages`).remove();
+                db.ref(`rooms/${currentUser.room}/messages`).push({
+                    sender: "SYSTEM", recipient: "ALL", text: "Room cleared.", timestamp: Date.now(), role: 'admin'
+                });
+            }
+        }
+        function downloadChat() {
+            db.ref(`rooms/${currentUser.room}/messages`).once('value', (snapshot) => {
+                const msgs = snapshot.val();
+                if (!msgs) return alert("No history.");
+                let text = `HISTORY: ${currentUser.room}\n\n`;
+                Object.values(msgs).forEach(m => {
+                    text += `[${new Date(m.timestamp).toLocaleTimeString()}] ${m.sender}: ${m.text || '[IMG]'}\n`;
+                });
+                const b = new Blob([text], { type: 'text/plain' });
+                const u = URL.createObjectURL(b);
+                const a = document.createElement('a');
+                a.href = u; a.download = `${currentUser.room}_history.txt`;
+                a.click();
+            });
         }
     </script>
 </body>
