@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atelier Connection</title>
+    
+    <!-- Reggio Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Reggio Palette --- */
+        :root {
+            --bg-paper: #FDFBF7;
+            --bg-canvas: #F2F0E9;
+            --glass-white: rgba(255, 255, 255, 0.95);
+            
+            --color-sage: #7C9082;
+            --color-clay: #D4A373;
+            --color-stone: #4A4A4A;
+            --color-pebble: #A8B5BA;
+            --color-alert: #E57373;
+            
+            --shadow-soft: 0 10px 30px rgba(124, 144, 130, 0.15);
+            --radius-main: 20px;
+            --radius-small: 12px;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: var(--bg-canvas);
+            background-image: radial-gradient(var(--color-sage) 0.5px, transparent 0.5px);
+            background-size: 20px 20px;
+            color: var(--color-stone);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .hidden { display: none !important; }
+
+        /* --- Main Window Container --- */
+        .window-container {
+            background-color: var(--glass-white);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.6);
+            border-radius: var(--radius-main);
+            box-shadow: var(--shadow-soft);
+            width: 100%;
+            max-width: 900px;
+            height: 85vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- Login Screen Styling --- */
+        #login-screen {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #fff 0%, var(--bg-canvas) 100%);
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--color-sage);
+            margin-bottom: 10px;
+        }
+
+        .kindness-note {
+            background-color: rgba(255,255,255,0.8);
+            border: 1px dashed var(--color-clay);
+            border-radius: var(--radius-small);
+            padding: 20px;
+            margin: 20px 0 30px 0;
+            max-width: 500px;
+            font-style: italic;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .kindness-note strong {
+            color: var(--color-clay);
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Inputs */
+        input, select {
+            background: #fff;
+            border: 1px solid var(--color-pebble);
+            border-radius: var(--radius-small);
+            padding: 12px 15px;
+            font-family: 'Lato', sans-serif;
+            font-size: 1rem;
+            color: var(--color-stone);
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 15px;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--color-sage);
+        }
+
+        /* Buttons */
+        button {
+            background-color: var(--color-sage);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 30px;
+            font-family: 'Lato', sans-serif;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.1s, background-color 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        button:hover {
+            background-color: #6A7F70;
+            transform: translateY(-1px);
+        }
+
+        .btn-google {
+            background-color: #fff;
+            color: #444;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .btn-google:hover { background-color: #f9f9f9; }
+
+        .btn-danger {
+            background-color: transparent;
+            color: var(--color-alert);
+            box-shadow: none;
+            border: 1px solid var(--color-alert);
+            font-size: 0.8rem;
+            padding: 6px 12px;
+        }
+        .btn-danger:hover { background-color: var(--color-alert); color: white; }
+
+        /* --- Chat Interface --- */
+        #app-screen {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        #top-bar {
+            height: 60px;
+            background-color: rgba(255,255,255,0.8);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        #chat-interface {
+            display: flex;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        #user-sidebar {
+            width: 250px;
+            background-color: var(--bg-canvas);
+            border-right: 1px solid rgba(0,0,0,0.05);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .user-item {
+            padding: 10px 15px;
+            border-radius: var(--radius-small);
+            cursor: pointer;
+            margin-bottom: 5px;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .user-item:hover { background-color: rgba(255,255,255,0.5); }
+        .user-item.selected { 
+            background-color: var(--color-sage); 
+            color: white; 
+            font-weight: bold;
+        }
+
+        /* Message Area */
+        #message-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-paper);
+        }
+
+        #msg-feed {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Message Bubbles */
+        .msg {
+            max-width: 70%;
+            padding: 12px 18px;
+            border-radius: 18px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .msg-meta {
+            font-size: 0.7rem;
+            margin-bottom: 4px;
+            opacity: 0.8;
+            font-weight: bold;
+            display: block;
+        }
+
+        /* Styles for different message types */
+        
+        /* 1. Standard (Other Students) */
+        .msg.student {
+            background-color: white;
+            color: var(--color-stone);
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        /* 2. Self (Me) */
+        .msg.self {
+            background-color: var(--color-sage);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+        .msg.self .msg-meta { color: rgba(255,255,255,0.9); }
+
+        /* 3. Teacher/Admin */
+        .msg.admin {
+            background-color: #FDF3E3; /* Soft cream */
+            border: 1px solid var(--color-clay);
+            color: #8D6E63;
+            align-self: center; /* Centered slightly? or just distinct */
+            max-width: 80%;
+        }
+        .msg.admin .msg-meta { color: var(--color-clay); font-family: 'Playfair Display', serif; }
+
+        /* 4. Private DM */
+        .msg.private {
+            border: 1px dashed var(--color-pebble);
+        }
+
+        /* Images in Chat */
+        .chat-image {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 8px;
+            border: 4px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Input Area */
+        #input-area {
+            padding: 15px 20px;
+            background-color: white;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #msg-input {
+            flex-grow: 1;
+            margin: 0;
+            border: 1px solid #eee;
+            background-color: var(--bg-paper);
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            color: var(--color-sage);
+            padding: 8px;
+            box-shadow: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .icon-btn:hover { background-color: var(--bg-canvas); transform: none; }
+        .icon-btn svg { width: 24px; height: 24px; stroke-width: 2; }
+
+    </style>
+</head>
+<body>
+
+    <div class="window-container">
+        <!-- 1. LOGIN SCREEN -->
+        <div id="login-screen">
+            <h2>Community Circle</h2>
+            <p style="margin-bottom: 20px; color: var(--color-pebble);">Digital Atelier Connection</p>
+
+            <div class="kindness-note">
+                <p>Welcome, friend.</p>
+                <p>Remember that our digital space is a reflection of our classroom.</p>
+                <p><strong>Everything written here is observed and recorded.</strong></p>
+                <p>Please speak with love, listen with kindness, and share with compassion.</p>
+            </div>
+            
+            <div id="login-form">
+                
+                <input type="text" id="room-code" placeholder="Frequency (Room Name)">
+
+                <!-- Google Auth Button (Primary) -->
+                <button id="google-btn" onclick="handleGoogleFlow()" class="btn-google" style="margin: 0 auto 15px auto;">
+                    <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                    Sign In with Google
+                </button>
+
+                <!-- Hidden Manual Override -->
+                <div id="manual-login-area" class="hidden" style="margin-top: 20px;">
+                    <input type="text" id="username" placeholder="Your Name">
+                    
+                    <button onclick="login()">Enter Circle</button>
+                    
+                    <div id="role-container" class="hidden">
+                        <select id="role-select">
+                            <option value="student">Student</option>
+                            <option value="teacher">Teacher (Guide)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <a style="font-size: 0.8rem; color: var(--color-pebble); cursor: pointer; text-decoration: underline; display: block; margin-top: 15px;" onclick="toggleManual()">Manual Override</a>
+            </div>
+        </div>
+
+        <!-- 2. MAIN APP SCREEN -->
+        <div id="app-screen" class="hidden">
+            <div id="top-bar">
+                <span id="display-room" style="font-weight: bold; color: var(--color-stone);">Room</span>
+                <span style="font-size: 0.9rem;">Connected as: <span id="display-name" style="color: var(--color-sage);">User</span></span>
+                <button onclick="signOut()" class="btn-danger">Leave</button>
+            </div>
+            
+            <div style="background: var(--color-sage); color: white; padding: 5px; text-align: center; font-size: 0.8rem;">
+                Speaking to: <span id="target-display" style="font-weight:bold; font-family: 'Playfair Display', serif; letter-spacing: 1px;">THE WHOLE GROUP</span>
+            </div>
+
+            <div id="chat-interface">
+                <!-- Left Sidebar: Users -->
+                <div id="user-sidebar">
+                    <div class="user-item selected" onclick="selectUser('ALL')">
+                        <!-- Icon: Users -->
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        Everyone
+                    </div>
+                    <div style="height: 1px; background: rgba(0,0,0,0.1); margin: 10px 0;"></div>
+                    <div id="dynamic-user-list"></div>
+                </div>
+
+                <!-- Right Side: Messages -->
+                <div id="message-area">
+                    <div id="msg-feed"></div>
+                    
+                    <div id="input-area">
+                        <!-- Hidden File Input -->
+                        <input type="file" id="file-input" accept="image/*" class="hidden" onchange="handleFileSelect()">
+                        
+                        <!-- Camera Button -->
+                        <button class="icon-btn" onclick="document.getElementById('file-input').click()" title="Share Image">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                        </button>
+
+                        <input type="text" id="msg-input" placeholder="Share a thought..." onkeydown="if(event.key==='Enter') sendMessage()">
+                        
+                        <!-- Send Button -->
+                        <button class="icon-btn" onclick="sendMessage()" title="Send" style="background-color: var(--color-sage); color: white; border-radius: 50%; padding: 10px; width: 40px; height: 40px;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FIREBASE SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script>
+        // =================================================================
+        // FIREBASE CONFIGURATION (PRESERVED)
+        // =================================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyA_5r6DAUKkYv5TFP9XM3K3SnRBtmdUS0g",
+            authDomain: "classroom-chat-756d5.firebaseapp.com",
+            databaseURL: "https://classroom-chat-756d5-default-rtdb.firebaseio.com",
+            projectId: "classroom-chat-756d5",
+            storageBucket: "classroom-chat-756d5.firebasestorage.app",
+            messagingSenderId: "805467042314",
+            appId: "1:805467042314:web:c70e68f316c3a76d73a5f3",
+            measurementId: "G-04X2N5MR75"
+        };
+
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const auth = firebase.auth();
+
+        // --- STATE ---
+        let currentUser = { name: "", room: "", role: "student" }; 
+        let selectedTarget = "ALL";
+        let dbListeners = [];
+        let authUserObject = null;
+
+        // --- ON LOAD ---
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            const roomParam = urlParams.get('room');
+            if (roomParam) {
+                const roomInput = document.getElementById("room-code");
+                roomInput.value = roomParam;
+                roomInput.disabled = true;
+            }
+
+            const isTeacher = urlParams.get('teacher') === 'true';
+            if (isTeacher) {
+                currentUser.role = 'teacher';
+                // Subtle indicator for admin
+                document.getElementById("login-screen").querySelector('h2').innerText += " (Guide Mode)";
+                toggleManual();
+            }
+
+            auth.onAuthStateChanged((user) => {
+                const btn = document.getElementById("google-btn");
+                if (user) {
+                    authUserObject = user;
+                    btn.innerHTML = `
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C9082" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        Continue as ${user.displayName}`;
+                    btn.style.color = "var(--color-sage)";
+                    btn.style.borderColor = "var(--color-sage)";
+                    document.getElementById("username").value = user.displayName;
+                } else {
+                    authUserObject = null;
+                    // Reset button content to default
+                    btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg> Sign In with Google`;
+                    btn.style.color = "#444";
+                    btn.style.borderColor = "#ddd";
+                }
+            });
+        };
+
+        // --- UI FUNCTIONS ---
+        function toggleManual() {
+            const area = document.getElementById("manual-login-area");
+            if (area.classList.contains("hidden")) {
+                area.classList.remove("hidden");
+            } else {
+                area.classList.add("hidden");
+            }
+        }
+
+        // --- AUTH FLOW ---
+        function handleGoogleFlow() {
+            const room = document.getElementById("room-code").value.trim();
+            if(!room) return alert("Please enter the Room Name first.");
+
+            if (authUserObject) {
+                document.getElementById("username").value = authUserObject.displayName;
+                login();
+            } else {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                auth.signInWithPopup(provider)
+                    .then((result) => {
+                        authUserObject = result.user;
+                        document.getElementById("username").value = result.user.displayName;
+                        login();
+                    }).catch((error) => {
+                        console.error(error);
+                        alert("Google Sign-In Failed: " + error.message);
+                    });
+            }
+        }
+
+        // --- LOGIN LOGIC ---
+        function login() {
+            const name = document.getElementById("username").value.trim();
+            const room = document.getElementById("room-code").value.trim();
+            
+            if(!name || !room) return alert("Please enter your name and room.");
+
+            if (currentUser.role === 'student') {
+                db.ref(`rooms/${room}`).get().then((snapshot) => {
+                    if (snapshot.exists()) {
+                        proceedToApp(name, room);
+                    } else {
+                        alert("Note: This room hasn't been opened by a Teacher yet.");
+                        return;
+                    }
+                }).catch((error) => {
+                    alert("Connection Error");
+                });
+            } else {
+                proceedToApp(name, room);
+            }
+        }
+
+        function proceedToApp(name, room) {
+            currentUser.name = name;
+            currentUser.room = room;
+
+            document.getElementById("login-screen").classList.add("hidden");
+            document.getElementById("app-screen").classList.remove("hidden");
+            document.getElementById("display-room").innerText = room;
+            document.getElementById("display-name").innerText = name;
+
+            const userRef = db.ref(`rooms/${room}/users/${name}`);
+            userRef.set({ role: currentUser.role, lastSeen: Date.now() });
+            userRef.onDisconnect().remove();
+
+            listenForMessages();
+            listenForUsers();
+        }
+
+        function signOut() {
+            if(currentUser.name && currentUser.room) {
+                db.ref(`rooms/${currentUser.room}/users/${currentUser.name}`).remove();
+            }
+            dbListeners.forEach(ref => ref.off());
+            dbListeners = [];
+            
+            document.getElementById("msg-feed").innerHTML = "";
+            document.getElementById("dynamic-user-list").innerHTML = "";
+            document.getElementById("app-screen").classList.add("hidden");
+            document.getElementById("login-screen").classList.remove("hidden");
+            
+            selectedTarget = "ALL";
+            document.getElementById("target-display").innerText = "THE WHOLE GROUP";
+        }
+
+        function listenForUsers() {
+            const usersRef = db.ref(`rooms/${currentUser.room}/users`);
+            dbListeners.push(usersRef);
+
+            usersRef.on('value', (snapshot) => {
+                const listDiv = document.getElementById("dynamic-user-list");
+                listDiv.innerHTML = "";
+                
+                snapshot.forEach((child) => {
+                    const uName = child.key;
+                    const uData = child.val();
+                    
+                    if(uName !== currentUser.name) {
+                        const div = document.createElement("div");
+                        div.className = "user-item";
+                        
+                        // Icon logic
+                        let icon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`;
+                        if(uData.role === 'teacher') {
+                            icon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4A373" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>`;
+                        }
+
+                        div.innerHTML = `${icon} <span>${uName}</span>`;
+                        
+                        div.onclick = () => {
+                            selectedTarget = uName;
+                            document.getElementById("target-display").innerText = uName.toUpperCase();
+                            document.querySelectorAll(".user-item").forEach(el => el.classList.remove("selected"));
+                            div.classList.add("selected");
+                        };
+                        listDiv.appendChild(div);
+                    }
+                });
+            });
+        }
+
+        function handleFileSelect() {
+            const fileInput = document.getElementById("file-input");
+            const file = fileInput.files[0];
+            
+            if (file) {
+                if (file.size > 1000000) {
+                    alert("Please choose a smaller image (under 1MB).");
+                    fileInput.value = "";
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64Data = e.target.result;
+                    if (confirm(`Share this image with the group?`)) {
+                        db.ref(`rooms/${currentUser.room}/messages`).push({
+                            sender: currentUser.name,
+                            role: currentUser.role,
+                            recipient: selectedTarget,
+                            text: "", 
+                            image: base64Data,
+                            timestamp: Date.now()
+                        });
+                    }
+                    fileInput.value = ""; 
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function listenForMessages() {
+            const msgsRef = db.ref(`rooms/${currentUser.room}/messages`);
+            dbListeners.push(msgsRef);
+
+            msgsRef.limitToLast(100).on('child_added', (snapshot) => {
+                const msg = snapshot.val();
+                let show = false;
+
+                if (currentUser.role === 'teacher') show = true; 
+                else if (msg.sender === currentUser.name) show = true; 
+                else if (msg.recipient === 'ALL') show = true; 
+                else if (msg.recipient === currentUser.name) show = true; 
+
+                if (show) {
+                    const feed = document.getElementById("msg-feed");
+                    const div = document.createElement("div");
+                    const isPrivate = msg.recipient !== 'ALL';
+                    const isAdmin = msg.role === 'teacher';
+                    const isSelf = msg.sender === currentUser.name;
+                    
+                    // Determine Styling Class
+                    let classes = "msg";
+                    if (isAdmin) {
+                        classes += " admin";
+                    } else if (isSelf) {
+                        classes += " self";
+                    } else {
+                        classes += " student";
+                    }
+                    
+                    if (isPrivate) classes += " private";
+
+                    div.className = classes;
+                    
+                    let meta = msg.sender;
+                    if(isPrivate) meta += ` (Whisper to ${msg.recipient})`;
+                    if(isAdmin) meta = `Guide ${msg.sender}`;
+
+                    // --- CONTENT RENDERING ---
+                    let contentHtml = "";
+                    if (msg.image) contentHtml += `<img src="${msg.image}" class="chat-image">`;
+                    if (msg.text) contentHtml += `<div>${msg.text}</div>`;
+
+                    div.innerHTML = `<span class="msg-meta">${meta}</span>${contentHtml}`;
+                    feed.appendChild(div);
+                    feed.scrollTop = feed.scrollHeight; 
+                }
+            });
+        }
+
+        function sendMessage() {
+            const input = document.getElementById("msg-input");
+            const text = input.value.trim();
+            if(!text) return;
+
+            db.ref(`rooms/${currentUser.room}/messages`).push({
+                sender: currentUser.name,
+                role: currentUser.role, 
+                recipient: selectedTarget,
+                text: text,
+                timestamp: Date.now()
+            });
+            input.value = "";
+        }
+    </script>
+</body>
+</html>
